@@ -1,0 +1,842 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Our Love Story ⚽ Messi Edition</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Georgia', serif;
+            background: linear-gradient(135deg, #004d98 0%, #a50044 50%, #6caddf 100%);
+            min-height: 100vh;
+            color: #ffffff;
+        }
+
+        .hearts-background {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            z-index: 0;
+            pointer-events: none;
+        }
+
+        .heart {
+            position: absolute;
+            font-size: 24px;
+            opacity: 0;
+            animation: float 6s infinite;
+        }
+
+        @keyframes float {
+            0% {
+                transform: translateY(100vh) rotate(0deg);
+                opacity: 0;
+            }
+            10% {
+                opacity: 0.6;
+            }
+            90% {
+                opacity: 0.6;
+            }
+            100% {
+                transform: translateY(-100px) rotate(360deg);
+                opacity: 0;
+            }
+        }
+
+        .container {
+            position: relative;
+            z-index: 1;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        header {
+            text-align: center;
+            padding: 40px 20px;
+            background: linear-gradient(135deg, #004d98 0%, #a50044 100%);
+            border-radius: 20px;
+            margin-bottom: 30px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            border: 3px solid #fdb913;
+        }
+
+        h1 {
+            font-size: 3em;
+            color: #fdb913;
+            margin-bottom: 10px;
+            text-shadow: 3px 3px 6px rgba(0, 0, 0, 0.5);
+            font-weight: bold;
+        }
+
+        .subtitle {
+            font-size: 1.3em;
+            color: #ffffff;
+            font-style: italic;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+        }
+
+        .nav-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            flex-wrap: wrap;
+            margin-bottom: 30px;
+        }
+
+        .nav-btn {
+            padding: 15px 30px;
+            font-size: 1.1em;
+            background: linear-gradient(135deg, #004d98 0%, #a50044 100%);
+            color: #fdb913;
+            border: 2px solid #fdb913;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.4);
+            font-weight: bold;
+        }
+
+        .nav-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(253, 185, 19, 0.5);
+            background: linear-gradient(135deg, #a50044 0%, #004d98 100%);
+        }
+
+        .nav-btn.active {
+            background: linear-gradient(135deg, #fdb913 0%, #ff9933 100%);
+            color: #004d98;
+            border-color: #004d98;
+        }
+
+        .section {
+            display: none;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            margin-bottom: 30px;
+            border: 3px solid #004d98;
+            color: #333;
+        }
+
+        .section.active {
+            display: block;
+            animation: fadeIn 0.5s;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .album-selector {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .album-btn {
+            padding: 12px 25px;
+            background: linear-gradient(135deg, #6caddf 0%, #ffffff 100%);
+            border: 3px solid #004d98;
+            border-radius: 30px;
+            cursor: pointer;
+            font-size: 1.1em;
+            color: #004d98;
+            font-weight: bold;
+            transition: all 0.3s;
+        }
+
+        .album-btn:hover {
+            background: linear-gradient(135deg, #004d98 0%, #a50044 100%);
+            color: #fdb913;
+            transform: scale(1.05);
+        }
+
+        .album-btn.active {
+            background: linear-gradient(135deg, #a50044 0%, #004d98 100%);
+            color: #fdb913;
+            border-color: #fdb913;
+        }
+
+        .photo-upload-area {
+            border: 3px dashed #004d98;
+            border-radius: 15px;
+            padding: 40px;
+            text-align: center;
+            margin-bottom: 30px;
+            background: rgba(108, 173, 223, 0.2);
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .photo-upload-area:hover {
+            background: rgba(108, 173, 223, 0.4);
+            border-color: #fdb913;
+        }
+
+        .photo-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        .photo-card {
+            position: relative;
+            background: white;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s;
+        }
+
+        .photo-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+        }
+
+        .photo-card img {
+            width: 100%;
+            height: 250px;
+            object-fit: cover;
+        }
+
+        .photo-caption {
+            padding: 15px;
+            background: white;
+        }
+
+        .photo-caption input {
+            width: 100%;
+            border: 2px solid #004d98;
+            border-radius: 8px;
+            padding: 8px;
+            font-size: 0.95em;
+            font-family: inherit;
+        }
+
+        .delete-photo {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: rgba(165, 0, 68, 0.9);
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 35px;
+            height: 35px;
+            cursor: pointer;
+            font-size: 1.2em;
+            transition: all 0.3s;
+        }
+
+        .delete-photo:hover {
+            background: rgba(220, 0, 0, 1);
+            transform: scale(1.1);
+        }
+
+        .quiz-container {
+            max-width: 700px;
+            margin: 0 auto;
+        }
+
+        .quiz-question {
+            background: linear-gradient(135deg, #e8f4fd 0%, #fff5e6 100%);
+            padding: 30px;
+            border-radius: 15px;
+            margin-bottom: 30px;
+            border: 3px solid #004d98;
+        }
+
+        .quiz-question h3 {
+            color: #a50044;
+            margin-bottom: 20px;
+            font-size: 1.3em;
+        }
+
+        .quiz-options {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .quiz-option {
+            padding: 15px 20px;
+            background: white;
+            border: 2px solid #004d98;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-size: 1.05em;
+        }
+
+        .quiz-option:hover {
+            background: #6caddf;
+            color: white;
+            transform: translateX(5px);
+        }
+
+        .quiz-option.selected {
+            background: #004d98;
+            color: #fdb913;
+            border-color: #fdb913;
+        }
+
+        .quiz-option.correct {
+            background: #4CAF50;
+            border-color: #2e7d32;
+            color: white;
+        }
+
+        .quiz-option.wrong {
+            background: #dc143c;
+            border-color: #a50044;
+            color: white;
+        }
+
+        .add-quiz-btn, .check-answers-btn, .save-data-btn {
+            display: block;
+            margin: 20px auto;
+            padding: 15px 40px;
+            background: linear-gradient(135deg, #004d98 0%, #a50044 100%);
+            color: #fdb913;
+            border: 2px solid #fdb913;
+            border-radius: 50px;
+            font-size: 1.1em;
+            cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.4);
+            font-weight: bold;
+        }
+
+        .add-quiz-btn:hover, .check-answers-btn:hover, .save-data-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(253, 185, 19, 0.5);
+            background: linear-gradient(135deg, #fdb913 0%, #ff9933 100%);
+            color: #004d98;
+        }
+
+        .quiz-score {
+            text-align: center;
+            font-size: 2em;
+            color: #fdb913;
+            margin: 30px 0;
+            padding: 20px;
+            background: linear-gradient(135deg, #004d98 0%, #a50044 100%);
+            border-radius: 15px;
+            display: none;
+            border: 3px solid #fdb913;
+            font-weight: bold;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+        }
+
+        .edit-mode {
+            background: #fff9e6;
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            border: 3px solid #fdb913;
+        }
+
+        .edit-mode input, .edit-mode textarea {
+            width: 100%;
+            margin: 10px 0;
+            padding: 10px;
+            border: 2px solid #004d98;
+            border-radius: 8px;
+            font-family: inherit;
+            font-size: 1em;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal.active {
+            display: flex;
+        }
+
+        .modal img {
+            max-width: 90%;
+            max-height: 90%;
+            border-radius: 10px;
+            box-shadow: 0 10px 50px rgba(0, 0, 0, 0.5);
+        }
+
+        .close-modal {
+            position: absolute;
+            top: 20px;
+            right: 30px;
+            font-size: 40px;
+            color: white;
+            cursor: pointer;
+            background: rgba(165, 0, 68, 0.8);
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 2px solid #fdb913;
+        }
+
+        @media (max-width: 768px) {
+            h1 { font-size: 2em; }
+            .subtitle { font-size: 1em; }
+            .photo-grid { grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); }
+            .nav-btn { padding: 12px 20px; font-size: 1em; }
+        }
+
+        .instructions {
+            background: linear-gradient(135deg, #e8f4fd 0%, #fff5e6 100%);
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            border-left: 5px solid #004d98;
+            border-right: 5px solid #a50044;
+        }
+
+        .instructions h3 {
+            color: #004d98;
+            margin-bottom: 10px;
+        }
+
+        .instructions ul {
+            margin-left: 20px;
+            line-height: 1.8;
+            color: #333;
+        }
+    </style>
+</head>
+<body>
+    <div class="hearts-background" id="heartsBackground"></div>
+    
+    <div class="container">
+        <header>
+            <h1>⚽ Our Love Story ⚽</h1>
+            <p class="subtitle">4 Years of Beautiful Memories | Messi Edition 🏆</p>
+        </header>
+
+        <div class="nav-buttons">
+            <button class="nav-btn active" onclick="showSection('photos')">📸 Photo Albums</button>
+            <button class="nav-btn" onclick="showSection('quiz')">🎯 Love Quiz</button>
+            <button class="nav-btn" onclick="showSection('timeline')">📅 Our Timeline</button>
+        </div>
+
+        <!-- Photos Section -->
+        <div id="photos" class="section active">
+            <div class="instructions">
+                <h3>📸 How to Add Photos:</h3>
+                <ul>
+                    <li>Select a year (Year 1, 2, 3, or 4)</li>
+                    <li>Click the upload area or drag & drop photos</li>
+                    <li>Add captions to describe each memory</li>
+                    <li>Click "Save All Data" when done</li>
+                    <li>All photos stay private on your device!</li>
+                </ul>
+            </div>
+
+            <div class="album-selector">
+                <button class="album-btn active" onclick="selectAlbum(1)">⚽ Year 1 (Barca #10)</button>
+                <button class="album-btn" onclick="selectAlbum(2)">🏆 Year 2 (La Liga)</button>
+                <button class="album-btn" onclick="selectAlbum(3)">🇦🇷 Year 3 (Argentina #10)</button>
+                <button class="album-btn" onclick="selectAlbum(4)">🏅 Year 4 (World Cup)</button>
+            </div>
+
+            <div class="photo-upload-area" onclick="document.getElementById('photoInput').click()">
+                <h2>📷 Click to Add Photos</h2>
+                <p>or drag and drop images here</p>
+                <input type="file" id="photoInput" multiple accept="image/*" style="display: none;" onchange="handlePhotoUpload(event)">
+            </div>
+
+            <div id="photoGrid1" class="photo-grid" style="display: grid;"></div>
+            <div id="photoGrid2" class="photo-grid" style="display: none;"></div>
+            <div id="photoGrid3" class="photo-grid" style="display: none;"></div>
+            <div id="photoGrid4" class="photo-grid" style="display: none;"></div>
+
+            <button class="save-data-btn" onclick="saveAllData()">💾 Save All Data</button>
+        </div>
+
+        <!-- Quiz Section -->
+        <div id="quiz" class="section">
+            <div class="instructions">
+                <h3>🎯 How to Create Your Quiz:</h3>
+                <ul>
+                    <li>Click "Add New Question" to create custom questions</li>
+                    <li>Enter your question and 4 answer options</li>
+                    <li>Mark the correct answer</li>
+                    <li>Take the quiz together!</li>
+                </ul>
+            </div>
+
+            <div class="quiz-container" id="quizContainer">
+                <!-- Sample questions will be added here -->
+                <div class="quiz-question" data-question="0">
+                    <h3>Where did we have our first date?</h3>
+                    <div class="quiz-options">
+                        <div class="quiz-option" onclick="selectAnswer(0, 0)">At a coffee shop</div>
+                        <div class="quiz-option" onclick="selectAnswer(0, 1)">At a restaurant</div>
+                        <div class="quiz-option" onclick="selectAnswer(0, 2)">At the movies</div>
+                        <div class="quiz-option" onclick="selectAnswer(0, 3)">At the park</div>
+                    </div>
+                </div>
+
+                <div class="quiz-question" data-question="1">
+                    <h3>What was our first movie together?</h3>
+                    <div class="quiz-options">
+                        <div class="quiz-option" onclick="selectAnswer(1, 0)">A romantic comedy</div>
+                        <div class="quiz-option" onclick="selectAnswer(1, 1)">An action movie</div>
+                        <div class="quiz-option" onclick="selectAnswer(1, 2)">A horror movie</div>
+                        <div class="quiz-option" onclick="selectAnswer(1, 3)">An animated movie</div>
+                    </div>
+                </div>
+
+                <div class="quiz-question" data-question="2">
+                    <h3>What's my favorite thing about you?</h3>
+                    <div class="quiz-options">
+                        <div class="quiz-option" onclick="selectAnswer(2, 0)">Your smile</div>
+                        <div class="quiz-option" onclick="selectAnswer(2, 1)">Your laugh</div>
+                        <div class="quiz-option" onclick="selectAnswer(2, 2)">Your kindness</div>
+                        <div class="quiz-option" onclick="selectAnswer(2, 3)">Everything!</div>
+                    </div>
+                </div>
+            </div>
+
+            <button class="add-quiz-btn" onclick="addNewQuestion()">➕ Add New Question</button>
+            <button class="check-answers-btn" onclick="checkAnswers()">✅ Check Answers</button>
+            <div class="quiz-score" id="quizScore"></div>
+        </div>
+
+        <!-- Timeline Section -->
+        <div id="timeline" class="section">
+            <div class="instructions">
+                <h3>📅 Our Journey Together:</h3>
+                <p>Add special milestones and memories from each year of our relationship!</p>
+            </div>
+
+            <div id="timelineContainer">
+                <div class="quiz-question">
+                    <h3>⚽ Year 1 Highlights (Barca Style)</h3>
+                    <textarea id="timeline1" rows="4" placeholder="Add your favorite memories from Year 1..." style="width: 100%; padding: 10px; border-radius: 8px; border: 2px solid #004d98; font-family: inherit;"></textarea>
+                </div>
+
+                <div class="quiz-question">
+                    <h3>🏆 Year 2 Highlights (La Liga Champion)</h3>
+                    <textarea id="timeline2" rows="4" placeholder="Add your favorite memories from Year 2..." style="width: 100%; padding: 10px; border-radius: 8px; border: 2px solid #004d98; font-family: inherit;"></textarea>
+                </div>
+
+                <div class="quiz-question">
+                    <h3>🇦🇷 Year 3 Highlights (Argentina Pride)</h3>
+                    <textarea id="timeline3" rows="4" placeholder="Add your favorite memories from Year 3..." style="width: 100%; padding: 10px; border-radius: 8px; border: 2px solid #004d98; font-family: inherit;"></textarea>
+                </div>
+
+                <div class="quiz-question">
+                    <h3>🏅 Year 4 Highlights (World Cup Glory)</h3>
+                    <textarea id="timeline4" rows="4" placeholder="Add your favorite memories from Year 4..." style="width: 100%; padding: 10px; border-radius: 8px; border: 2px solid #004d98; font-family: inherit;"></textarea>
+                </div>
+            </div>
+
+            <button class="save-data-btn" onclick="saveAllData()">💾 Save Timeline</button>
+        </div>
+    </div>
+
+    <!-- Image Modal -->
+    <div class="modal" id="imageModal" onclick="closeModal()">
+        <span class="close-modal">×</span>
+        <img id="modalImage" src="" alt="Full size image">
+    </div>
+
+    <script>
+        // Initialize
+        let currentAlbum = 1;
+        let photoData = {
+            album1: [],
+            album2: [],
+            album3: [],
+            album4: []
+        };
+        let quizAnswers = {};
+        let correctAnswers = {0: 0, 1: 0, 2: 3}; // Sample correct answers
+
+        // Create floating football elements animation
+        function createHearts() {
+            const container = document.getElementById('heartsBackground');
+            const icons = ['⚽', '🏆', '⭐', '🥇', '👑', '🇦🇷', '💙', '❤️'];
+            
+            setInterval(() => {
+                const heart = document.createElement('div');
+                heart.className = 'heart';
+                heart.textContent = icons[Math.floor(Math.random() * icons.length)];
+                heart.style.left = Math.random() * 100 + '%';
+                heart.style.animationDuration = (Math.random() * 3 + 4) + 's';
+                heart.style.animationDelay = Math.random() * 2 + 's';
+                container.appendChild(heart);
+                
+                setTimeout(() => heart.remove(), 8000);
+            }, 800);
+        }
+
+        createHearts();
+
+        // Load saved data
+        function loadSavedData() {
+            const saved = localStorage.getItem('valentinesData');
+            if (saved) {
+                const data = JSON.parse(saved);
+                photoData = data.photos || photoData;
+                correctAnswers = data.correctAnswers || correctAnswers;
+                
+                // Load photos
+                for (let i = 1; i <= 4; i++) {
+                    renderPhotos(i);
+                }
+                
+                // Load timeline
+                for (let i = 1; i <= 4; i++) {
+                    const timeline = document.getElementById(`timeline${i}`);
+                    if (data.timeline && data.timeline[i]) {
+                        timeline.value = data.timeline[i];
+                    }
+                }
+            }
+        }
+
+        loadSavedData();
+
+        // Navigation
+        function showSection(section) {
+            document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+            document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+            
+            document.getElementById(section).classList.add('active');
+            event.target.classList.add('active');
+        }
+
+        // Album selection
+        function selectAlbum(album) {
+            currentAlbum = album;
+            document.querySelectorAll('.album-btn').forEach(b => b.classList.remove('active'));
+            event.target.classList.add('active');
+            
+            document.querySelectorAll('.photo-grid').forEach(g => g.style.display = 'none');
+            document.getElementById(`photoGrid${album}`).style.display = 'grid';
+        }
+
+        // Photo upload
+        function handlePhotoUpload(event) {
+            const files = event.target.files;
+            const albumKey = `album${currentAlbum}`;
+            
+            Array.from(files).forEach(file => {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    photoData[albumKey].push({
+                        src: e.target.result,
+                        caption: ''
+                    });
+                    renderPhotos(currentAlbum);
+                };
+                reader.readAsDataURL(file);
+            });
+        }
+
+        // Render photos
+        function renderPhotos(album) {
+            const grid = document.getElementById(`photoGrid${album}`);
+            const albumKey = `album${album}`;
+            grid.innerHTML = '';
+            
+            photoData[albumKey].forEach((photo, index) => {
+                const card = document.createElement('div');
+                card.className = 'photo-card';
+                card.innerHTML = `
+                    <img src="${photo.src}" alt="Memory" onclick="openModal('${photo.src}')">
+                    <button class="delete-photo" onclick="deletePhoto(${album}, ${index})">×</button>
+                    <div class="photo-caption">
+                        <input type="text" placeholder="Add a caption..." value="${photo.caption}" 
+                               onchange="updateCaption(${album}, ${index}, this.value)">
+                    </div>
+                `;
+                grid.appendChild(card);
+            });
+        }
+
+        // Update caption
+        function updateCaption(album, index, caption) {
+            const albumKey = `album${album}`;
+            photoData[albumKey][index].caption = caption;
+        }
+
+        // Delete photo
+        function deletePhoto(album, index) {
+            if (confirm('Delete this photo?')) {
+                const albumKey = `album${album}`;
+                photoData[albumKey].splice(index, 1);
+                renderPhotos(album);
+            }
+        }
+
+        // Modal functions
+        function openModal(src) {
+            document.getElementById('imageModal').classList.add('active');
+            document.getElementById('modalImage').src = src;
+        }
+
+        function closeModal() {
+            document.getElementById('imageModal').classList.remove('active');
+        }
+
+        // Quiz functions
+        function selectAnswer(question, answer) {
+            const options = document.querySelectorAll(`[data-question="${question}"] .quiz-option`);
+            options.forEach(opt => opt.classList.remove('selected'));
+            options[answer].classList.add('selected');
+            quizAnswers[question] = answer;
+        }
+
+        function checkAnswers() {
+            let correct = 0;
+            const total = Object.keys(correctAnswers).length;
+            
+            Object.keys(correctAnswers).forEach(q => {
+                const question = parseInt(q);
+                const options = document.querySelectorAll(`[data-question="${question}"] .quiz-option`);
+                
+                options.forEach((opt, index) => {
+                    opt.classList.remove('correct', 'wrong');
+                    if (index === correctAnswers[question]) {
+                        opt.classList.add('correct');
+                    }
+                    if (quizAnswers[question] === index && index !== correctAnswers[question]) {
+                        opt.classList.add('wrong');
+                    }
+                });
+                
+                if (quizAnswers[question] === correctAnswers[question]) {
+                    correct++;
+                }
+            });
+            
+            const scoreDiv = document.getElementById('quizScore');
+            if (correct === total) {
+                scoreDiv.textContent = '⚽ You scored ' + correct + ' out of ' + total + '! GOOOAL! Perfect score like Messi! 🏆👑';
+            } else {
+                scoreDiv.textContent = '⚽ You scored ' + correct + ' out of ' + total + '! Keep making more memories together! Just like Messi, practice makes perfect! 💙❤️';
+            }
+            scoreDiv.style.display = 'block';
+        }
+
+        function addNewQuestion() {
+            const container = document.getElementById('quizContainer');
+            const questionNum = document.querySelectorAll('.quiz-question').length;
+            
+            const questionDiv = document.createElement('div');
+            questionDiv.className = 'quiz-question edit-mode';
+            questionDiv.innerHTML = `
+                <h3>New Question</h3>
+                <input type="text" placeholder="Enter your question..." id="newQ${questionNum}">
+                <input type="text" placeholder="Option 1" id="newA${questionNum}_0">
+                <input type="text" placeholder="Option 2" id="newA${questionNum}_1">
+                <input type="text" placeholder="Option 3" id="newA${questionNum}_2">
+                <input type="text" placeholder="Option 4" id="newA${questionNum}_3">
+                <label>Correct answer (0-3): <input type="number" min="0" max="3" id="newCorrect${questionNum}"></label>
+                <button class="add-quiz-btn" onclick="saveNewQuestion(${questionNum})">Save Question</button>
+            `;
+            container.appendChild(questionDiv);
+        }
+
+        function saveNewQuestion(num) {
+            const question = document.getElementById(`newQ${num}`).value;
+            const answers = [
+                document.getElementById(`newA${num}_0`).value,
+                document.getElementById(`newA${num}_1`).value,
+                document.getElementById(`newA${num}_2`).value,
+                document.getElementById(`newA${num}_3`).value
+            ];
+            const correct = parseInt(document.getElementById(`newCorrect${num}`).value);
+            
+            if (!question || answers.some(a => !a) || isNaN(correct)) {
+                alert('Please fill in all fields!');
+                return;
+            }
+            
+            const container = document.getElementById('quizContainer');
+            const questionDiv = document.createElement('div');
+            questionDiv.className = 'quiz-question';
+            questionDiv.setAttribute('data-question', num);
+            questionDiv.innerHTML = `
+                <h3>${question}</h3>
+                <div class="quiz-options">
+                    ${answers.map((a, i) => `<div class="quiz-option" onclick="selectAnswer(${num}, ${i})">${a}</div>`).join('')}
+                </div>
+            `;
+            
+            container.appendChild(questionDiv);
+            correctAnswers[num] = correct;
+            
+            // Remove edit mode div
+            document.querySelectorAll('.edit-mode').forEach(e => e.remove());
+        }
+
+        // Save all data
+        function saveAllData() {
+            const timeline = {};
+            for (let i = 1; i <= 4; i++) {
+                timeline[i] = document.getElementById(`timeline${i}`).value;
+            }
+            
+            const data = {
+                photos: photoData,
+                correctAnswers: correctAnswers,
+                timeline: timeline
+            };
+            
+            localStorage.setItem('valentinesData', JSON.stringify(data));
+            alert('⚽ GOOOAL! All your memories have been saved! Just like Messi\'s trophies, they are stored securely on this device only. 🏆💙❤️');
+        }
+
+        // Drag and drop
+        const uploadArea = document.querySelector('.photo-upload-area');
+        
+        uploadArea.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            uploadArea.style.background = 'rgba(108, 173, 223, 0.4)';
+        });
+        
+        uploadArea.addEventListener('dragleave', () => {
+            uploadArea.style.background = 'rgba(108, 173, 223, 0.2)';
+        });
+        
+        uploadArea.addEventListener('drop', (e) => {
+            e.preventDefault();
+            uploadArea.style.background = 'rgba(108, 173, 223, 0.2)';
+            const files = e.dataTransfer.files;
+            document.getElementById('photoInput').files = files;
+            handlePhotoUpload({target: {files: files}});
+        });
+    </script>
+</body>
+</html>
